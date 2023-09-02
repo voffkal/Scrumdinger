@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct ScrumdingerApp: App {
-//    @State private var scrums = DailyScrum.sampleData
+    //    @State private var scrums = DailyScrum.sampleData
     @StateObject private var store = ScrumStore()
     @State private var errorWrapper: ErrorWrapper?
     var body: some Scene {
@@ -24,21 +24,24 @@ struct ScrumdingerApp: App {
                     }
                 }
             }
-                .task {
-                    do{
-                        try await store.load()
-                    }
-                    catch {
-                        errorWrapper = ErrorWrapper(error: error, guidance: "Scrumdinger will load sample data and continue.      xcrun simctl get_app_container booted com.example.apple-samplecode.Scrumdinger data     ")
-                    }
+            .task {
+                do{
+                    try await store.load()
                 }
-                .sheet(item: $errorWrapper) {
-                
-                    store.scrums = DailyScrum.sampleData
-                } content: { wrapper in
-                    ErrorView(errorWrapper: wrapper)
+                catch {
+                    errorWrapper = ErrorWrapper(error: error, guidance: 
+                    """
+                    Scrumdinger will load sample data and continue.
+                    xcrun simctl get_app_container booted com.example.apple-samplecode.Scrumdinger data
+                    """)
                 }
-
+            }
+            .sheet(item: $errorWrapper) {
+                store.scrums = DailyScrum.sampleData
+            } content: { wrapper in
+                ErrorView(errorWrapper: wrapper)
+            }
+            
         }
     }
 }

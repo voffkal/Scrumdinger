@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ErrorView: View {
+    
     let errorWrapper: ErrorWrapper
     @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         NavigationStack{
             VStack{
